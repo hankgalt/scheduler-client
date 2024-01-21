@@ -4,4 +4,5 @@ coverage/
 *.log
 certs
 creds
+dist
 tsconfig.tsbuildinfo
