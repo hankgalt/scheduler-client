@@ -1,8 +1,8 @@
 {
   "name": "@hankgalt/scheduler-client",
   "description": "scheduler service typescript client",
-  "version": "0.0.12",
-  "main": "index.ts",
+  "version": "0.0.13",
+  "main": "dist/index.js",
   "directories": {
     "lib": "lib"
   },
