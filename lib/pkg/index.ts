@@ -111,9 +111,9 @@ export interface BusinessEntityRequest {
   type: BusinessEntityType
 }
 
-type BusinessAgentEntity = Optional<BusinessEntity>
-type BusinessPrincipalEntity = Optional<BusinessEntity>
-type BusinessFilingEntity = Optional<BusinessEntity>
+export type BusinessAgentEntity = Optional<BusinessEntity>
+export type BusinessPrincipalEntity = Optional<BusinessEntity>
+export type BusinessFilingEntity = Optional<BusinessEntity>
 
 export interface BusinessEntity {
   type: BusinessEntityType

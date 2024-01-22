@@ -10,7 +10,13 @@ export type {
   Headers,
   FileProcessingRequest,
   FileWorkflowStateRequest,
-  WorkflowRunSearchParams
+  WorkflowRunSearchParams,
+  BusinessEntityRequest,
+  BusinessEntityResponse,
+  BusinessEntity,
+  BusinessAgentEntity,
+  BusinessPrincipalEntity,
+  BusinessFilingEntity,
 } from './lib/pkg'
 export { BusinessEntityType } from './lib/pkg'
 export type { SchedulerServiceClient } from './lib/scheduler-client'
