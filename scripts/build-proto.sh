@@ -2,8 +2,8 @@
 
 BASEDIR=$(dirname "$0")
 
-# PROTO_SOURCE="./lib/proto/*.proto"
-PROTO_SOURCE="./lib/proto/api/google/rpc/*.proto"
+PROTO_SOURCE="./lib/proto/*.proto"
+# PROTO_SOURCE="./lib/proto/api/google/rpc/*.proto"
 echo "PROTO_SOURCE: $PROTO_SOURCE"
 PROTO_BASE=$(dirname "$PROTO_SOURCE")
 echo "PROTO_BASE: $PROTO_BASE"

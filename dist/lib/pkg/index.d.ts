@@ -1,5 +1,5 @@
-import { EntityType, FileSignalRequest, QueryWorkflowRequest, SearchRunRequest } from '../proto/_gen/scheduler_pb';
-import type { FileWorkflowState, BatchState, HeaderState, ErrorResultState, SuccessResultState, WorkflowRun } from '../proto/_gen/scheduler_pb';
+import { EntityType, FileSignalRequest, QueryWorkflowRequest, SearchRunRequest, EntityRequest } from '../proto/_gen/scheduler_pb';
+import type { FileWorkflowState, BatchState, HeaderState, ErrorResultState, SuccessResultState, WorkflowRun, EntityResponse } from '../proto/_gen/scheduler_pb';
 export type { SchedulerServiceGRPCClient } from './client';
 export declare enum BusinessEntityType {
     AGENT = "AGENT",
@@ -71,6 +71,24 @@ export interface WorkflowResult {
     headers?: Headers;
     batches: BatchResult[];
 }
+type Optional<Type> = {
+    [Property in keyof Type]?: Type[Property];
+};
+export interface BusinessEntityRequest {
+    id: string;
+    type: BusinessEntityType;
+}
+type BusinessAgentEntity = Optional<BusinessEntity>;
+type BusinessPrincipalEntity = Optional<BusinessEntity>;
+type BusinessFilingEntity = Optional<BusinessEntity>;
+export interface BusinessEntity {
+    type: BusinessEntityType;
+    entity: BusinessAgentEntity | BusinessPrincipalEntity | BusinessFilingEntity;
+}
+export type BusinessEntityResponse = {
+    entity?: BusinessEntity;
+    error?: Error;
+};
 export declare const buildFileSignalRequest: (params: FileProcessingRequest) => FileSignalRequest;
 export declare const buildQueryWorkflowRequest: (params: FileWorkflowStateRequest) => QueryWorkflowRequest;
 export interface WorkflowRunSearchParams {
@@ -80,7 +98,9 @@ export interface WorkflowRunSearchParams {
     type?: string;
     externalRef?: string;
 }
+export declare const buildEntityRequest: (params: BusinessEntityRequest) => EntityRequest;
 export declare const buildSearchRunRequest: (params: WorkflowRunSearchParams) => SearchRunRequest;
+export declare const mapProtoToBusinessEntityResponse: (entity: EntityResponse) => BusinessEntityResponse;
 export declare const mapEntityTypeToProto: (type: BusinessEntityType) => EntityType | undefined;
 export declare const mapProtoToWorkflowRuns: (wfrs: WorkflowRun[]) => SchedulerWorkflowRun[];
 export declare const mapProtoToWorkflowRun: (wfr: WorkflowRun) => SchedulerWorkflowRun;

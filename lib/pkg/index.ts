@@ -2,7 +2,8 @@ import {
   EntityType,
   FileSignalRequest,
   QueryWorkflowRequest,
-  SearchRunRequest
+  SearchRunRequest,
+  EntityRequest
 } from '../proto/_gen/scheduler_pb'
 import type {
   FileWorkflowState,
@@ -10,7 +11,11 @@ import type {
   HeaderState,
   ErrorResultState,
   SuccessResultState,
-  WorkflowRun
+  WorkflowRun,
+  EntityResponse,
+  BusinessAgent,
+  BusinessPrincipal,
+  BusinessFiling
 } from '../proto/_gen/scheduler_pb'
 
 export type { SchedulerServiceGRPCClient } from './client'
@@ -97,6 +102,29 @@ export interface WorkflowResult {
   batches: BatchResult[]
 }
 
+type Optional<Type> = {
+  [Property in keyof Type]?: Type[Property];
+};
+
+export interface BusinessEntityRequest {
+  id: string
+  type: BusinessEntityType
+}
+
+type BusinessAgentEntity = Optional<BusinessEntity>
+type BusinessPrincipalEntity = Optional<BusinessEntity>
+type BusinessFilingEntity = Optional<BusinessEntity>
+
+export interface BusinessEntity {
+  type: BusinessEntityType
+  entity: BusinessAgentEntity | BusinessPrincipalEntity | BusinessFilingEntity
+}
+
+export type BusinessEntityResponse = {
+  entity?: BusinessEntity
+  error?: Error
+}
+
 export const buildFileSignalRequest = (params: FileProcessingRequest) => {
   const { filePath, requestedBy, type } = params
   const req = new FileSignalRequest()
@@ -123,6 +151,15 @@ export interface WorkflowRunSearchParams {
   externalRef?: string
 }
 
+export const buildEntityRequest = (params: BusinessEntityRequest) => {
+  const { id, type } = params
+  const req = new EntityRequest()
+  req.setId(id)
+  const entityType = mapEntityTypeToProto(type)
+  if (entityType) req.setType(entityType)
+  return req
+}
+
 export const buildSearchRunRequest = (params: WorkflowRunSearchParams) => {
   const { runId, workflowId } = params
   const req = new SearchRunRequest()
@@ -132,6 +169,97 @@ export const buildSearchRunRequest = (params: WorkflowRunSearchParams) => {
   req.setType(params.type || '')
   req.setExternalref(params.externalRef || '')
   return req
+}
+
+export const mapProtoToBusinessEntityResponse = (
+  entity: EntityResponse
+): BusinessEntityResponse => {
+  const entityObj = entity.toObject()
+  if (entityObj.agent) {
+    return {
+      entity: {
+        type: BusinessEntityType.AGENT,
+        entity: mapProtoToBusinessAgent(entity.getAgent())
+      }
+    }
+  } else if (entityObj.principal) {
+    return {
+      entity: {
+        type: BusinessEntityType.PRINCIPAL,
+        entity: mapProtoToBusinessPrincipal(entity.getPrincipal())
+      }
+    }
+  } else if (entityObj.filing) {
+    return {
+      entity: {
+        type: BusinessEntityType.FILING,
+        entity: mapProtoToBusinessFiling(entity.getFiling())
+      }
+    }
+  } else {
+    return {
+      error: new Error('unknown entity type')
+    }
+  }
+}
+
+const mapProtoToBusinessAgent = (ag: BusinessAgent | undefined): BusinessAgentEntity => {
+  if (!ag) return {} as BusinessAgentEntity
+  const bag = {
+    id: ag.getId(),
+    entityId: ag.getEntityid(),
+    name: ag.getName(),
+    org: ag.getOrg(),
+    firstName: ag.getFirstname(),
+    middleName: ag.getMiddlename(),
+    lastName: ag.getLastname(),
+    address: ag.getAddress(),
+    agentType: ag.getAgenttype(),
+  } as BusinessAgentEntity
+  return bag
+}
+
+const mapProtoToBusinessPrincipal = (pr: BusinessPrincipal | undefined): BusinessPrincipalEntity => {
+  if (!pr) return {} as BusinessPrincipalEntity
+  const prg = {
+    id: pr.getId(),
+    entityId: pr.getEntityid(),
+    name: pr.getName(),
+    org: pr.getOrg(),
+    firstName: pr.getFirstname(),
+    middleName: pr.getMiddlename(),
+    lastName: pr.getLastname(),
+    address: pr.getAddress(),
+    positionType: pr.getPositiontype(),
+  } as BusinessPrincipalEntity
+  return prg
+}
+
+const mapProtoToBusinessFiling = (fl: BusinessFiling | undefined): BusinessFilingEntity => {
+  if (!fl) return {} as BusinessFilingEntity
+  const bfl = {
+    id: fl.getId(),
+    entityId: fl.getEntityid(),
+    name: fl.getName(),
+    initialFilingDate: fl.getInitialfilingdate(),
+    jurisdiction: fl.getJurisdiction(),
+    status: fl.getStatus(),
+    sos: fl.getSos(),
+    type: fl.getType(),
+    filingType: fl.getFilingtype(),
+    foreignName: fl.getForeignname(),
+    ftb: fl.getFtb(),
+    vcfcf: fl.getVcfcf(),
+    suspensionDate: fl.getSuspensiondate(),
+    lastFiledNum:  fl.getLastfilednum(),
+    lastFiledDate: fl.getLastfileddate(),
+    principalAddress: fl.getPrincipaladdress(),
+    mailingAddress: fl.getMailingaddress(),
+    localAddress: fl.getLocaladdress(),
+    managementStructure: fl.getManagementstructure(),
+    businessType: fl.getBusinesstype(),
+  } as BusinessFilingEntity
+  return bfl
 }
 
 export const mapEntityTypeToProto = (

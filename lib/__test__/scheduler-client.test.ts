@@ -1,10 +1,11 @@
+import { BusinessEntityType } from '../pkg'
 import { ServiceClient } from '../scheduler-client'
 
 describe('scheduler client', () => {
   const client = new ServiceClient()
 
   test('query workflow state', async () => {
-    const runId = '3d912ccf-7752-4ad5-9c68-cd3a68ce06f1'
+    const runId = 'bca20bd3-08f0-4b39-8f5a-dfe5fed57eb2'
     const workflowId = 'file-scheduler/Agents-sm.csv'
 
     let resp = await client.fileWorkflowState({ runId, workflowId })
@@ -13,7 +14,7 @@ describe('scheduler client', () => {
   })
 
   test('search workflow runs', async () => {
-    const runId = '3d912ccf-7752-4ad5-9c68-cd3a68ce06f1'
+    const runId = 'bca20bd3-08f0-4b39-8f5a-dfe5fed57eb2'
     const workflowId = 'file-scheduler/Agents-sm.csv'
     const externalRef = 'scheduler/Agents-sm.csv'
 
@@ -28,5 +29,12 @@ describe('scheduler client', () => {
     } catch (err) {
       console.error(err)
     }
+  })
+
+  test('get business entity', async () => {
+    const id = '202252219688'
+
+    let resp = await client.getEntity({ type: BusinessEntityType.AGENT, id })
+    expect(resp.entity?.type).toEqual(BusinessEntityType.AGENT)
   })
 })

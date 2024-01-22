@@ -2,6 +2,7 @@ import schedulerClient from './pkg/client'
 import { fileWorkflowState } from './pkg/file-workflow-state'
 import { fileSignalWorkflow } from './pkg/file-signal-workflow'
 import { searchWorkflowRuns } from './pkg/search-workflow-runs'
+import { getEntity } from './pkg/get-entity'
 import type {
   FileProcessingRequest,
   WorkflowRunResponse,
@@ -9,7 +10,9 @@ import type {
   WorkflowStateResponse,
   SchedulerServiceGRPCClient,
   WorkflowRunSearchParams,
-  WorkflowRunsResponse
+  WorkflowRunsResponse,
+  BusinessEntityRequest,
+  BusinessEntityResponse
 } from './pkg'
 
 export interface SchedulerServiceClient {
@@ -24,6 +27,10 @@ export interface SchedulerServiceClient {
   searchWorkflowRuns(
     params: WorkflowRunSearchParams
   ): Promise<WorkflowRunsResponse>
+
+  getEntity(
+    params: BusinessEntityRequest
+  ): Promise<BusinessEntityResponse>
 }
 
 export class ServiceClient {
@@ -49,5 +56,11 @@ export class ServiceClient {
     params: WorkflowRunSearchParams
   ): Promise<WorkflowRunsResponse> {
     return searchWorkflowRuns(this.client, params)
+  }
+
+  async getEntity(
+    params: BusinessEntityRequest
+  ): Promise<BusinessEntityResponse> {
+    return getEntity(this.client, params)
   }
 }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapWorkflowStateResponse = exports.mapProtoToFileWorkflowState = exports.mapProtoToBatchResult = exports.mapProtoToErrorResult = exports.mapProtoToSuccessResults = exports.mapProtoToSuccessResult = exports.mapProtoToHeaders = exports.mapProtoToWorkflowRun = exports.mapProtoToWorkflowRuns = exports.mapEntityTypeToProto = exports.buildSearchRunRequest = exports.buildQueryWorkflowRequest = exports.buildFileSignalRequest = exports.BusinessEntityType = void 0;
+exports.mapWorkflowStateResponse = exports.mapProtoToFileWorkflowState = exports.mapProtoToBatchResult = exports.mapProtoToErrorResult = exports.mapProtoToSuccessResults = exports.mapProtoToSuccessResult = exports.mapProtoToHeaders = exports.mapProtoToWorkflowRun = exports.mapProtoToWorkflowRuns = exports.mapEntityTypeToProto = exports.mapProtoToBusinessEntityResponse = exports.buildSearchRunRequest = exports.buildEntityRequest = exports.buildQueryWorkflowRequest = exports.buildFileSignalRequest = exports.BusinessEntityType = void 0;
 const scheduler_pb_1 = require("../proto/_gen/scheduler_pb");
 var BusinessEntityType;
 (function (BusinessEntityType) {
@@ -28,6 +28,16 @@ const buildQueryWorkflowRequest = (params) => {
     return req;
 };
 exports.buildQueryWorkflowRequest = buildQueryWorkflowRequest;
+const buildEntityRequest = (params) => {
+    const { id, type } = params;
+    const req = new scheduler_pb_1.EntityRequest();
+    req.setId(id);
+    const entityType = (0, exports.mapEntityTypeToProto)(type);
+    if (entityType)
+        req.setType(entityType);
+    return req;
+};
+exports.buildEntityRequest = buildEntityRequest;
 const buildSearchRunRequest = (params) => {
     const { runId, workflowId } = params;
     const req = new scheduler_pb_1.SearchRunRequest();
@@ -39,6 +49,98 @@ const buildSearchRunRequest = (params) => {
     return req;
 };
 exports.buildSearchRunRequest = buildSearchRunRequest;
+const mapProtoToBusinessEntityResponse = (entity) => {
+    const entityObj = entity.toObject();
+    if (entityObj.agent) {
+        return {
+            entity: {
+                type: BusinessEntityType.AGENT,
+                entity: mapProtoToBusinessAgent(entity.getAgent())
+            }
+        };
+    }
+    else if (entityObj.principal) {
+        return {
+            entity: {
+                type: BusinessEntityType.PRINCIPAL,
+                entity: mapProtoToBusinessPrincipal(entity.getPrincipal())
+            }
+        };
+    }
+    else if (entityObj.filing) {
+        return {
+            entity: {
+                type: BusinessEntityType.FILING,
+                entity: mapProtoToBusinessFiling(entity.getFiling())
+            }
+        };
+    }
+    else {
+        return {
+            error: new Error('unknown entity type')
+        };
+    }
+};
+exports.mapProtoToBusinessEntityResponse = mapProtoToBusinessEntityResponse;
+const mapProtoToBusinessAgent = (ag) => {
+    if (!ag)
+        return {};
+    const bag = {
+        id: ag.getId(),
+        entityId: ag.getEntityid(),
+        name: ag.getName(),
+        org: ag.getOrg(),
+        firstName: ag.getFirstname(),
+        middleName: ag.getMiddlename(),
+        lastName: ag.getLastname(),
+        address: ag.getAddress(),
+        agentType: ag.getAgenttype(),
+    };
+    return bag;
+};
+const mapProtoToBusinessPrincipal = (pr) => {
+    if (!pr)
+        return {};
+    const prg = {
+        id: pr.getId(),
+        entityId: pr.getEntityid(),
+        name: pr.getName(),
+        org: pr.getOrg(),
+        firstName: pr.getFirstname(),
+        middleName: pr.getMiddlename(),
+        lastName: pr.getLastname(),
+        address: pr.getAddress(),
+        positionType: pr.getPositiontype(),
+    };
+    return prg;
+};
+const mapProtoToBusinessFiling = (fl) => {
+    if (!fl)
+        return {};
+    const bfl = {
+        id: fl.getId(),
+        entityId: fl.getEntityid(),
+        name: fl.getName(),
+        initialFilingDate: fl.getInitialfilingdate(),
+        jurisdiction: fl.getJurisdiction(),
+        status: fl.getStatus(),
+        sos: fl.getSos(),
+        type: fl.getType(),
+        filingType: fl.getFilingtype(),
+        foreignName: fl.getForeignname(),
+        ftb: fl.getFtb(),
+        vcfcf: fl.getVcfcf(),
+        suspensionDate: fl.getSuspensiondate(),
+        lastFiledNum: fl.getLastfilednum(),
+        lastFiledDate: fl.getLastfileddate(),
+        principalAddress: fl.getPrincipaladdress(),
+        mailingAddress: fl.getMailingaddress(),
+        localAddress: fl.getLocaladdress(),
+        managementStructure: fl.getManagementstructure(),
+        businessType: fl.getBusinesstype(),
+    };
+    return bfl;
+};
 const mapEntityTypeToProto = (type) => {
     switch (type) {
         case BusinessEntityType.AGENT:
