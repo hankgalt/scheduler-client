@@ -87,7 +87,7 @@ const mapProtoToBusinessAgent = (ag) => {
         return {};
     const bag = {
         id: ag.getId(),
-        entityId: ag.getEntityid(),
+        entityId: String(ag.getEntityid()),
         name: ag.getName(),
         org: ag.getOrg(),
         firstName: ag.getFirstname(),
@@ -103,7 +103,7 @@ const mapProtoToBusinessPrincipal = (pr) => {
         return {};
     const prg = {
         id: pr.getId(),
-        entityId: pr.getEntityid(),
+        entityId: String(pr.getEntityid()),
         name: pr.getName(),
         org: pr.getOrg(),
         firstName: pr.getFirstname(),
@@ -119,7 +119,7 @@ const mapProtoToBusinessFiling = (fl) => {
         return {};
     const bfl = {
         id: fl.getId(),
-        entityId: fl.getEntityid(),
+        entityId: String(fl.getEntityid()),
         name: fl.getName(),
         initialFilingDate: fl.getInitialfilingdate(),
         jurisdiction: fl.getJurisdiction(),

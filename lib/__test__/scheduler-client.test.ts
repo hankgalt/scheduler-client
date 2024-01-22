@@ -36,5 +36,6 @@ describe('scheduler client', () => {
 
     let resp = await client.getEntity({ type: BusinessEntityType.AGENT, id })
     expect(resp.entity?.type).toEqual(BusinessEntityType.AGENT)
+    expect(resp.entity?.entity.id).toEqual(id)
   })
 })

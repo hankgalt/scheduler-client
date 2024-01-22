@@ -111,9 +111,52 @@ export interface BusinessEntityRequest {
   type: BusinessEntityType
 }
 
-export type BusinessAgentEntity = Optional<BusinessEntity>
-export type BusinessPrincipalEntity = Optional<BusinessEntity>
-export type BusinessFilingEntity = Optional<BusinessEntity>
+export type BusinessAgentEntity = {
+  id: string
+  entityId: string
+  name?: string
+  org?: string
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  address?: string
+  agentType?: string
+}
+
+export type BusinessPrincipalEntity = {
+  id: string
+  entityId: string
+  name?: string
+  org?: string
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  address?: string
+  positionType?: string
+}
+
+export type BusinessFilingEntity = {
+  id: string
+  entityId: string
+  name?: string
+  initialFilingDate?: number
+  jurisdiction?: string
+  status?: string
+  sos?: string
+  type?: string
+  filingType?: string
+  foreignName?: string
+  ftb?: string
+  vcfcf?: string
+  suspensionDate?: number
+  lastFiledNum?: string
+  lastFiledDate?: number
+  principalAddress?: string
+  mailingAddress?: string
+  localAddress?: string
+  managementStructure?: string
+  businessType?: string
+}
 
 export interface BusinessEntity {
   type: BusinessEntityType
@@ -207,7 +250,7 @@ const mapProtoToBusinessAgent = (ag: BusinessAgent | undefined): BusinessAgentEn
   if (!ag) return {} as BusinessAgentEntity
   const bag = {
     id: ag.getId(),
-    entityId: ag.getEntityid(),
+    entityId: String(ag.getEntityid()),
     name: ag.getName(),
     org: ag.getOrg(),
     firstName: ag.getFirstname(),
@@ -215,7 +258,7 @@ const mapProtoToBusinessAgent = (ag: BusinessAgent | undefined): BusinessAgentEn
     lastName: ag.getLastname(),
     address: ag.getAddress(),
     agentType: ag.getAgenttype(),
-  } as BusinessAgentEntity
+  }
   return bag
 }
 
@@ -223,7 +266,7 @@ const mapProtoToBusinessPrincipal = (pr: BusinessPrincipal | undefined): Busines
   if (!pr) return {} as BusinessPrincipalEntity
   const prg = {
     id: pr.getId(),
-    entityId: pr.getEntityid(),
+    entityId: String(pr.getEntityid()),
     name: pr.getName(),
     org: pr.getOrg(),
     firstName: pr.getFirstname(),
@@ -237,9 +280,9 @@ const mapProtoToBusinessPrincipal = (pr: BusinessPrincipal | undefined): Busines
 
 const mapProtoToBusinessFiling = (fl: BusinessFiling | undefined): BusinessFilingEntity => {
   if (!fl) return {} as BusinessFilingEntity
-  const bfl = {
+  const bfl =  {
     id: fl.getId(),
-    entityId: fl.getEntityid(),
+    entityId: String(fl.getEntityid()),
     name: fl.getName(),
     initialFilingDate: fl.getInitialfilingdate(),
     jurisdiction: fl.getJurisdiction(),

@@ -71,16 +71,54 @@ export interface WorkflowResult {
     headers?: Headers;
     batches: BatchResult[];
 }
-type Optional<Type> = {
-    [Property in keyof Type]?: Type[Property];
-};
 export interface BusinessEntityRequest {
     id: string;
     type: BusinessEntityType;
 }
-export type BusinessAgentEntity = Optional<BusinessEntity>;
-export type BusinessPrincipalEntity = Optional<BusinessEntity>;
-export type BusinessFilingEntity = Optional<BusinessEntity>;
+export type BusinessAgentEntity = {
+    id: string;
+    entityId: string;
+    name?: string;
+    org?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    address?: string;
+    agentType?: string;
+};
+export type BusinessPrincipalEntity = {
+    id: string;
+    entityId: string;
+    name?: string;
+    org?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    address?: string;
+    positionType?: string;
+};
+export type BusinessFilingEntity = {
+    id: string;
+    entityId: string;
+    name?: string;
+    initialFilingDate?: number;
+    jurisdiction?: string;
+    status?: string;
+    sos?: string;
+    type?: string;
+    filingType?: string;
+    foreignName?: string;
+    ftb?: string;
+    vcfcf?: string;
+    suspensionDate?: number;
+    lastFiledNum?: string;
+    lastFiledDate?: number;
+    principalAddress?: string;
+    mailingAddress?: string;
+    localAddress?: string;
+    managementStructure?: string;
+    businessType?: string;
+};
 export interface BusinessEntity {
     type: BusinessEntityType;
     entity: BusinessAgentEntity | BusinessPrincipalEntity | BusinessFilingEntity;
