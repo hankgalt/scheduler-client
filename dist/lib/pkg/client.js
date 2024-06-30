@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getChannelCredentials = void 0;
+exports.getChannelCredentials = getChannelCredentials;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const scheduler_grpc_pb_1 = require("../proto/_gen/scheduler_grpc_pb");
@@ -34,7 +34,6 @@ function getChannelCredentials() {
     const clientKey = fs.readFileSync(path.resolve(`${process.env.SCHEDULER_CLIENT_KEY_PATH ?? ''}`));
     return (0, utils_1.getCredentials)(rootCert, clientKey, clientCert);
 }
-exports.getChannelCredentials = getChannelCredentials;
 console.log('Scheduler service host: ', process.env.SCHEDULER_SERVICE_HOST);
 const schedulerClient = new scheduler_grpc_pb_1.SchedulerClient(process.env.SCHEDULER_SERVICE_HOST ?? '', getChannelCredentials(), { interceptors: [utils_1.commonInterceptor] });
 exports.default = schedulerClient;

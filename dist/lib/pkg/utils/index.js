@@ -24,6 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commonInterceptor = exports.getCredentials = void 0;
+/* eslint @typescript-eslint/no-explicit-any: 0 */
 const grpc = __importStar(require("@grpc/grpc-js"));
 const getCredentials = (rootCert, clientKey, clientCert) => {
     return grpc.credentials.combineChannelCredentials(grpc.ChannelCredentials.createSsl(rootCert, clientKey, clientCert), grpc.credentials.createFromMetadataGenerator(function (args, callback) {

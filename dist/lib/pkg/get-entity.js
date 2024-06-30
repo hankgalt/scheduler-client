@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEntity = void 0;
+exports.getEntity = getEntity;
 const index_1 = require("./index");
 async function getEntity(client, params) {
     return await new Promise((resolve, reject) => {
@@ -28,4 +28,3 @@ async function getEntity(client, params) {
         }
     });
 }
-exports.getEntity = getEntity;

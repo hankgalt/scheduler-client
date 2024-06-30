@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchWorkflowRuns = void 0;
+exports.searchWorkflowRuns = searchWorkflowRuns;
 const index_1 = require("./index");
 async function searchWorkflowRuns(client, params) {
     return await new Promise((resolve, reject) => {
@@ -29,4 +29,3 @@ async function searchWorkflowRuns(client, params) {
         }
     });
 }
-exports.searchWorkflowRuns = searchWorkflowRuns;

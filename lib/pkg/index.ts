@@ -102,10 +102,6 @@ export interface WorkflowResult {
   batches: BatchResult[]
 }
 
-type Optional<Type> = {
-  [Property in keyof Type]?: Type[Property];
-};
-
 export interface BusinessEntityRequest {
   id: string
   type: BusinessEntityType

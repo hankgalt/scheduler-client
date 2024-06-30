@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fileWorkflowState = void 0;
+exports.fileWorkflowState = fileWorkflowState;
 const index_1 = require("./index");
 async function fileWorkflowState(client, params) {
     return await new Promise((resolve, reject) => {
@@ -29,4 +29,3 @@ async function fileWorkflowState(client, params) {
         }
     });
 }
-exports.fileWorkflowState = fileWorkflowState;
